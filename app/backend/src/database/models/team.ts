@@ -1,7 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import db from '.';
+import { TeamInterface } from '../../interface/modelsInterfaces';
 
-class Team extends Model {}
+class Team extends Model implements TeamInterface {
+  public teamName: string;
+}
 
 Team.init({
   teamName: {

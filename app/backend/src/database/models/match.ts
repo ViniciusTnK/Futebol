@@ -1,8 +1,15 @@
 import { Model, DataTypes } from 'sequelize';
 import db from '.';
 import Team from './team';
+import { MatchInterface } from '../../interface/modelsInterfaces';
 
-class Match extends Model {}
+class Match extends Model implements MatchInterface {
+  public homeTeam: number;
+  public homeTeamGoals: number;
+  public awayTeam: number;
+  public awayTeamGoals: number;
+  public inProgress: boolean;
+}
 
 Match.init({
   homeTeam: {
@@ -15,7 +22,7 @@ Match.init({
   },
   awayTeam: {
     allowNull: false,
-    type: DataTypes.NUMBER,
+    type: DataTypes.INTEGER,
   },
   awayTeamGoals: {
     allowNull: false,

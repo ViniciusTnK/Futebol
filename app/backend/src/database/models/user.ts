@@ -1,8 +1,14 @@
 import { Model, DataTypes } from 'sequelize';
 import db from '.';
-// import OtherModel from './OtherModel';
+import { UserInterface } from '../../interface/modelsInterfaces';
 
-class User extends Model {}
+class User extends Model implements UserInterface {
+  public id: number;
+  public role: string;
+  public email: string;
+  public password: string;
+  public username: string;
+}
 
 User.init({
   username: {
