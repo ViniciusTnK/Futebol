@@ -1,13 +1,14 @@
 import * as express from 'express';
+import { RouterAndURL, validURL } from './types/routerTypes';
+import routes from './routes';
 
 class App {
-  public app: express.Express;
-  // ...
+  private _app: express.Express;
 
-  constructor() {
-    this.app = express();
+  constructor(routers: RouterAndURL[] = []) {
+    this._app = express();
     this.config();
-    // ...
+    routers.forEach(({ url, router }) => this._app.use(url, router));
   }
 
   private config():void {
@@ -18,17 +19,24 @@ class App {
       next();
     };
 
-    this.app.use(accessControl);
-    // ...
+    this._app.use(accessControl);
+    this._app.use(express.json());
   }
 
-  // ...
+  public useRouter(url: validURL, router: express.Router) {
+    this._app.use(url, router);
+  }
+
+  get app() {
+    return this._app;
+  }
+
   public start(PORT: string | number):void {
-    this.app.listen(PORT);
+    this._app.listen(PORT);
   }
 }
 
 export { App };
 
 // A execução dos testes de cobertura depende dessa exportação
-export const { app } = new App();
+export const { app } = new App(routes);
