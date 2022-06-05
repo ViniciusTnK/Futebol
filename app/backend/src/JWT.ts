@@ -1,10 +1,8 @@
 import { SignOptions, sign, verify, Secret } from 'jsonwebtoken';
-// import { readFileSync } from 'fs';
+import { readFileSync } from 'fs';
 
-// const defaultPassword = readFileSync('../jwt.evaluation.key', { encoding: 'utf8' });
-// ! FIX THIS LATTER
-// line above not working, don't know why yet
-const defaultPassword = 'tnc';
+const defaultPassword = readFileSync('jwt.evaluation.key', { encoding: 'utf8' });
+
 const defaultOptions: SignOptions = {
   expiresIn: '1d',
   algorithm: 'HS256',
