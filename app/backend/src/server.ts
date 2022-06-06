@@ -1,11 +1,12 @@
 import App from './app';
 import 'dotenv/config';
 import defaultError from './middlewares/defaultError';
-import { loginRouter } from './routers';
+import { loginRouter, teamsRouter } from './routers';
 import { RouterAndURL } from './types/routerTypes';
 
 const routers: RouterAndURL[] = [
   { url: '/login', router: loginRouter },
+  { url: '/teams', router: teamsRouter },
 ];
 
 const PORT = process.env.PORT || 3001;
