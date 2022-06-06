@@ -1,5 +1,4 @@
-import loginRouter from './login';
+import loginRouter from './loginRouter';
+import teamsRouter from './teamsRouter';
 
-// TODO: take this out
-// eslint-disable-next-line import/prefer-default-export
-export { loginRouter };
+export { loginRouter, teamsRouter };
