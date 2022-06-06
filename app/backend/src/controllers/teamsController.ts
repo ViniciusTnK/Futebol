@@ -12,6 +12,17 @@ async function getall(req: Request, res: Response, next: NextFunction) {
   res.status(OK).json(teams);
 }
 
+async function getTeam(req: Request, res: Response, next: NextFunction) {
+  const { id } = req.params;
+
+  const team = await teamsService.getTeam(id);
+
+  if ('error' in team) return next(team.error);
+
+  res.status(OK).json(team);
+}
+
 export default {
   getall,
+  getTeam,
 };
