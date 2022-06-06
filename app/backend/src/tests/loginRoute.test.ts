@@ -152,7 +152,7 @@ describe("Test '/login' POST route", () => {
   });
 });
 
-describe("Test '/login' POST route", () => {
+describe("Test '/login/validate' GET route", () => {
   it(`when the authorization is valid: should return ${OK}`, async () => {
     sinon
     .stub(User, 'findOne')
