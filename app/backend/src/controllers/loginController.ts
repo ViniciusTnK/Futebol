@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import loginService from '../service/loginService';
+import { loginService } from '../service';
 import WebToken from '../JWT';
 import { UserInterface } from '../interface/modelsInterfaces';
 
