@@ -7,10 +7,12 @@ interface UserInterface {
 }
 
 interface TeamInterface {
+  id: number;
   teamName: string;
 }
 
 interface MatchInterface {
+  id: number;
   homeTeam: number;
   homeTeamGoals: number;
   awayTeam: number;

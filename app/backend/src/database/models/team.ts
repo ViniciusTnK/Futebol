@@ -3,6 +3,7 @@ import db from '.';
 import { TeamInterface } from '../../interface/modelsInterfaces';
 
 class Team extends Model implements TeamInterface {
+  public id: number;
   public teamName: string;
 }
 

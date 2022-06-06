@@ -4,6 +4,7 @@ import Team from './team';
 import { MatchInterface } from '../../interface/modelsInterfaces';
 
 class Match extends Model implements MatchInterface {
+  public id: number;
   public homeTeam: number;
   public homeTeamGoals: number;
   public awayTeam: number;
