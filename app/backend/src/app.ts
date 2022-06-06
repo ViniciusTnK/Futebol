@@ -1,13 +1,22 @@
 import * as express from 'express';
+import { CorsOptions } from 'cors';
+import cors = require('cors');
 import { RouterAndURL, validURL } from './types/routerTypes';
-import routes from './routes';
+
+const defaultCorsOptions = {
+  origin: process.env.FRONT_END || /^http:\/\/localhost:3000(\/.+)?/,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
 
 class App {
   private _app: express.Express;
 
-  constructor(routers: RouterAndURL[] = []) {
+  constructor(routers: RouterAndURL[] = [], corsOptions: CorsOptions = defaultCorsOptions) {
     this._app = express();
     this.config();
+    this._app.use(cors(corsOptions));
     routers.forEach(({ url, router }) => this._app.use(url, router));
   }
 
@@ -36,7 +45,6 @@ class App {
   }
 }
 
-export { App };
+export default App;
 
-// A execução dos testes de cobertura depende dessa exportação
-export const { app } = new App(routes);
+// app export transferred to server.ts
