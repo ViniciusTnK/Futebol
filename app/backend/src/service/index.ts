@@ -1,3 +1,3 @@
-import loginController from './loginService';
+import loginService from './loginService';
 
-export { loginController };
+export { loginService };
