@@ -13,7 +13,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     homeTeamGoals: Joi.number().required(),
     awayTeam: Joi.number().required(),
     awayTeamGoals: Joi.number().required(),
-    inProgress: Joi.bool().required(),
+    inProgress: Joi.bool(),
   });
 
   const { error } = matchShema.validate(match);
