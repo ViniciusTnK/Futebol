@@ -39,6 +39,14 @@ async function getAll() {
   } catch (error) { return { error }; }
 }
 
+async function createMatch(data: Match) {
+  try {
+    const match = await Match.create(data);
+    return match;
+  } catch (error) { return { error }; }
+}
+
 export default {
   getAll,
+  createMatch,
 };
