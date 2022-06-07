@@ -9,7 +9,7 @@ async function getAll() {
   }
 }
 
-async function getTeam(id: string) {
+async function getTeam(id: string | number) {
   try {
     const team = await Teams.findOne({ where: { id } });
 
