@@ -19,6 +19,8 @@ const { OK, CREATED } = StatusCodes;
 const teamHome = { id: 1, teamName: 'home' };
 const teamAway = { id: 2, teamName: 'away' };
 
+const id = 1;
+
 const matches = [
   {
     id: 1,
@@ -70,7 +72,6 @@ describe("Test '/matches' GET route", () => {
   });
 });
 
-const id = 1;
 const match = {
   homeTeam: 1,
   homeTeamGoals: 2,
@@ -93,6 +94,25 @@ describe("Test '/matches' POST route", () => {
   
     expect(body).to.deep.equal({ ...match, id });
     expect(status).to.equal(CREATED);
+    
+    sinon.restore();
+  });
+});
+
+const message = "Finished";
+describe("Test '/matches/:id/finish' PATCH route", () => {
+  it(`When all goes well: should return status ${OK} and the message: ${message}`, async () => {
+    sinon
+    .stub(Match, 'update')
+    .withArgs({ inProgress: false }, { where: { id } })
+    .resolves([0, []]);
+    
+    const { body, status } = await chai
+      .request(app)
+      .patch(`/matches/${id}/finish`);
+  
+    expect(body).to.deep.equal({ message });
+    expect(status).to.equal(OK);
     
     sinon.restore();
   });
