@@ -14,7 +14,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-const { OK, CREATED } = StatusCodes;
+const { OK, CREATED, UNAUTHORIZED } = StatusCodes;
 
 const teamHome = { id: 1, teamName: 'home' };
 const teamAway = { id: 2, teamName: 'away' };
@@ -96,6 +96,26 @@ describe("Test '/matches' POST route", () => {
     expect(status).to.equal(CREATED);
     
     sinon.restore();
+  });
+
+  const invalidMatch = {
+    homeTeam: 1,
+    homeTeamGoals: 2,
+    awayTeam: 1,
+    awayTeamGoals: 4,
+    inProgress: true,
+  };
+
+  const message = 'It is not possible to create a match with two equal teams';
+  it(`if the two teams received are the same: should return status ${UNAUTHORIZED} and the message: ${message}`, async () => {
+    const { body, status } = await chai
+      .request(app)
+      .post('/matches')
+      .send(invalidMatch);
+  
+    console.log(body);
+    expect(body.message).to.equal(message);
+    expect(status).to.equal(UNAUTHORIZED);
   });
 });
 
