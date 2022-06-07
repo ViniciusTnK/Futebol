@@ -22,12 +22,14 @@ async function createMatch(req: Request, res: Response, next: NextFunction) {
 }
 
 async function updateInProgress(req: Request, res: Response, next: NextFunction) {
-  const { id } = req.params;
+  const { id: bruteId } = req.params;
 
-  const notValid = typeof id !== 'number' && typeof id !== 'string';
+  const notValid = typeof bruteId !== 'number' && typeof bruteId !== 'string';
   if (notValid) return res.status(BAD_REQUEST).json({ message: 'invalid param' });
 
-  const result = await matchesService.updateInProgress(parseInt(id, 10));
+  const id = parseInt(bruteId, 10);
+
+  const result = await matchesService.updateMatch({ id }, { inProgress: false });
 
   if ('error' in result) return next(result.error);
 

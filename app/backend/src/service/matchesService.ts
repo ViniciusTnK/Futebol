@@ -3,6 +3,7 @@ import { defaultErrorMsg, notFound } from '../errorMessages';
 import Match from '../database/models/match';
 import Team from '../database/models/team';
 import teamsService from './teamsService';
+import { MatchInterface } from '../interface/modelsInterfaces';
 
 const { NOT_FOUND } = StatusCodes;
 
@@ -54,14 +55,14 @@ async function createMatch(data: Match) {
   } catch (error) { return { error }; }
 }
 
-async function updateInProgress(id: number) {
+async function updateMatch(filters: Partial<MatchInterface>, attributes: Partial<MatchInterface>) {
   try {
-    return await Match.update({ inProgress: false }, { where: { id } });
+    return await Match.update(attributes, { where: filters });
   } catch (error) { return { error }; }
 }
 
 export default {
   getAll,
   createMatch,
-  updateInProgress,
+  updateMatch,
 };
