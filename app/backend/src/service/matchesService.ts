@@ -1,9 +1,10 @@
-// import { StatusCodes } from 'http-status-codes';
-import { notFound } from '../errorMessages';
+import { StatusCodes } from 'http-status-codes';
+import { defaultErrorMsg, notFound } from '../errorMessages';
 import Match from '../database/models/match';
 import Team from '../database/models/team';
+import teamsService from './teamsService';
 
-// const { NOT_FOUND } = StatusCodes;
+const { NOT_FOUND } = StatusCodes;
 
 async function getAll() {
   try {
@@ -41,7 +42,14 @@ async function getAll() {
 
 async function createMatch(data: Match) {
   try {
-    const match = await Match.create(data);
+    // check if both teams exist
+    const teamsPromise = [teamsService.getTeam(data.homeTeam), teamsService.getTeam(data.awayTeam)];
+    const teams = await Promise.all(teamsPromise);
+    const teamIsMissing = teams.some((team) => ('error' in team));
+
+    if (teamIsMissing) return defaultErrorMsg(NOT_FOUND, 'There is no team with such id!');
+
+    const match = await Match.create({ ...data, inProgress: true });
     return match;
   } catch (error) { return { error }; }
 }
