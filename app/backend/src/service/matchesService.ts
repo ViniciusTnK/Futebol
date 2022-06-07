@@ -46,7 +46,14 @@ async function createMatch(data: Match) {
   } catch (error) { return { error }; }
 }
 
+async function updateInProgress(id: number) {
+  try {
+    return await Match.update({ inProgress: false }, { where: { id } });
+  } catch (error) { return { error }; }
+}
+
 export default {
   getAll,
   createMatch,
+  updateInProgress,
 };
