@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import db from '.';
-import Team from './team';
 import { MatchInterface } from '../../interface/modelsInterfaces';
+import Team from './team';
 
 class Match extends Model implements MatchInterface {
   public id: number;
@@ -40,10 +40,11 @@ Match.init({
   timestamps: false,
 });
 
-Team.hasMany(Match, { foreignKey: 'homeTeam', as: 'matches' });
-Match.belongsTo(Team, { foreignKey: 'homeTeam', as: 'homeTeam' });
-
-Team.hasMany(Match, { foreignKey: 'awayTeam', as: 'matches' });
-Match.belongsTo(Team, { foreignKey: 'awayTeam', as: 'homeTeam' });
+// ? is this the right way to do when using eager loading?
+// ? how should make the association Team.HasMany(Match), i can't see the solution
+Team.hasMany(Match, { foreignKey: 'awayTeam', as: 'matchesAway' });
+Team.hasMany(Match, { foreignKey: 'homeTeam', as: 'matchesHome' });
+Match.belongsTo(Team, { foreignKey: 'homeTeam', as: 'teamHome' });
+Match.belongsTo(Team, { foreignKey: 'awayTeam', as: 'teamAway' });
 
 export default Match;
