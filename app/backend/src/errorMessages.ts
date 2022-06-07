@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { MyReturn } from './types/errorTypes';
 
-function defaultErrorMsg(status: number, message: string): MyReturn {
+function defaultErrorMsg(status = 500, message = 'internal server error'): MyReturn {
   return {
     error: { status, message },
   };
