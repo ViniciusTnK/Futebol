@@ -14,7 +14,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-const { OK } = StatusCodes;
+const { OK, CREATED } = StatusCodes;
 
 const teamHome = { id: 1, teamName: 'home' };
 const teamAway = { id: 2, teamName: 'away' };
@@ -65,6 +65,34 @@ describe("Test '/matches' GET route", () => {
   
     expect(body).to.deep.equal(expectedResult);
     expect(status).to.equal(OK);
+    
+    sinon.restore();
+  });
+});
+
+const id = 1;
+const match = {
+  homeTeam: 1,
+  homeTeamGoals: 2,
+  awayTeam: 3,
+  awayTeamGoals: 4,
+  inProgress: true,
+};
+
+describe("Test '/matches' POST route", () => {
+  it(`When all goes well: should return status ${CREATED} and the match created`, async () => {
+    sinon
+    .stub(Match, 'create')
+    .withArgs(match)
+    .resolves({ ...match, id } as Match);
+    
+    const { body, status } = await chai
+      .request(app)
+      .post('/matches')
+      .send(match);
+  
+    expect(body).to.deep.equal({ ...match, id });
+    expect(status).to.equal(CREATED);
     
     sinon.restore();
   });
