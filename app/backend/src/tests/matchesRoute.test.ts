@@ -113,7 +113,6 @@ describe("Test '/matches' POST route", () => {
       .post('/matches')
       .send(invalidMatch);
   
-    console.log(body);
     expect(body.message).to.equal(message);
     expect(status).to.equal(UNAUTHORIZED);
   });
@@ -132,6 +131,29 @@ describe("Test '/matches/:id/finish' PATCH route", () => {
       .patch(`/matches/${id}/finish`);
   
     expect(body).to.deep.equal({ message });
+    expect(status).to.equal(OK);
+    
+    sinon.restore();
+  });
+});
+
+const update = {
+  homeTeamGoals: 3,
+  awayTeamGoals: 1,
+}
+
+describe("Test '/matches/:id' PATCH route", () => {
+  it(`When all goes well: should return status ${OK}`, async () => {
+    sinon
+    .stub(Match, 'update')
+    .withArgs(update, { where: { id } })
+    .resolves([0, []]);
+    
+    const { status } = await chai
+      .request(app)
+      .patch(`/matches/${id}`)
+      .send(update);
+  
     expect(status).to.equal(OK);
     
     sinon.restore();
