@@ -36,8 +36,22 @@ async function updateInProgress(req: Request, res: Response, next: NextFunction)
   res.status(OK).json({ message: 'Finished' });
 }
 
+async function updateMatch(req: Request, res: Response, next: NextFunction) {
+  const { id: bruteId } = req.params;
+  const { homeTeamGoals, awayTeamGoals } = req.body;
+
+  const id = parseInt(bruteId, 10);
+
+  const result = await matchesService.updateMatch({ id }, { homeTeamGoals, awayTeamGoals });
+
+  if ('error' in result) return next(result.error);
+
+  res.status(OK).json({ homeTeamGoals, awayTeamGoals });
+}
+
 export default {
   getall,
   createMatch,
   updateInProgress,
+  updateMatch,
 };
