@@ -19,7 +19,7 @@ async function getLeaderboardByPlace(req: Request, res: Response, next: NextFunc
 }
 
 async function getLeaderboard(req: Request, res: Response, next: NextFunction) {
-  const leaderboard = await leaderboardService.getLeaderboard();
+  const leaderboard = await leaderboardService.getLeaderboardByPlace('all');
 
   if ('error' in leaderboard) return next(leaderboard.error);
 
@@ -27,6 +27,6 @@ async function getLeaderboard(req: Request, res: Response, next: NextFunction) {
 }
 
 export default {
-  getLeaderboard,
   getLeaderboardByPlace,
+  getLeaderboard,
 };

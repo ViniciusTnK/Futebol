@@ -91,41 +91,30 @@ function getAllInfo(teams: Team[], matches: Match[], place: places) {
   });
 }
 
-async function getLeaderboardSorted(place: places) {
-  const [teams, matches] = await Promise.all([teamsService.getAll(), matchesService.getAll()]);
-  if (isError(teams) || isError(matches)) return defaultErrorMsg();
-
-  const finishedMatches = matches.filter(({ inProgress }) => !inProgress);
-  const result = await Promise.all(getAllInfo(teams, finishedMatches, place));
-
-  return result.sort((a, b): number => {
-    const {
-      totalPoints: aP, totalVictories: aV, goalsBalance: aB, goalsFavor: aFavor, goalsOwn: aOwn,
-    } = a;
-    const {
-      totalPoints: bP, totalVictories: bV, goalsBalance: bB, goalsFavor: bFavor, goalsOwn: bOwn,
-    } = b;
-    const array = [aP, aV, aB, aFavor, aOwn];
-    const brray = [bP, bV, bB, bFavor, bOwn];
-
-    // invert so it descend
-    return -1 * orderByCriteria(array, brray);
-  });
-}
-
 async function getLeaderboardByPlace(place: places) {
   try {
-    return await getLeaderboardSorted(place);
-  } catch (error) { return { error }; }
-}
+    const [teams, matches] = await Promise.all([teamsService.getAll(), matchesService.getAll()]);
+    if (isError(teams) || isError(matches)) return defaultErrorMsg();
 
-async function getLeaderboard() {
-  try {
-    return await getLeaderboardSorted('all');
+    const finishedMatches = matches.filter(({ inProgress }) => !inProgress);
+    const result = await Promise.all(getAllInfo(teams, finishedMatches, place));
+
+    return result.sort((a, b): number => {
+      const {
+        totalPoints: aP, totalVictories: aV, goalsBalance: aB, goalsFavor: aFavor, goalsOwn: aOwn,
+      } = a;
+      const {
+        totalPoints: bP, totalVictories: bV, goalsBalance: bB, goalsFavor: bFavor, goalsOwn: bOwn,
+      } = b;
+      const array = [aP, aV, aB, aFavor, aOwn];
+      const brray = [bP, bV, bB, bFavor, bOwn];
+
+      // invert so it descend
+      return -1 * orderByCriteria(array, brray);
+    });
   } catch (error) { return { error }; }
 }
 
 export default {
   getLeaderboardByPlace,
-  getLeaderboard,
 };
