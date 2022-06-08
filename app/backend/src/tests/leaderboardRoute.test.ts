@@ -25,37 +25,68 @@ const teamAway = { id: 2, teamName: 'away' };
 
 const matches = [{
   homeTeam: 1,
-  homeTeamGoals: 2,
+  homeTeamGoals: 4,
   awayTeam: 2,
-  awayTeamGoals: 4,
-}];
+  awayTeamGoals: 2,
+}, {
+  homeTeam: 2,
+  homeTeamGoals: 1,
+  awayTeam: 1,
+  awayTeamGoals: 0,
+}
+];
 
-const expectedResult = [
+const expectedResultAll = [
+  {
+    name: teamHome.teamName,
+    totalPoints: 3,
+    totalGames: 2,
+    totalVictories: 1,
+    totalDraws: 0,
+    totalLosses: 1,
+    goalsFavor: 4,
+    goalsOwn: 3,
+    goalsBalance: 1,
+    efficiency: efficiency(3, 2),
+  },
   {
     name: teamAway.teamName,
     totalPoints: 3,
-    totalGames: 1,
+    totalGames: 2,
     totalVictories: 1,
     totalDraws: 0,
-    totalLosses: 0,
-    goalsFavor: 4,
-    goalsOwn: 2,
-    goalsBalance: 2,
-    efficiency: efficiency(3, 1),
-  },
-  {
-    name: teamHome.teamName,
-    totalPoints: 0,
-    totalGames: 1,
-    totalVictories: 0,
-    totalDraws: 0,
     totalLosses: 1,
-    goalsFavor: 2,
+    goalsFavor: 3,
     goalsOwn: 4,
-    goalsBalance: -2,
-    efficiency: efficiency(0, 1),
+    goalsBalance: -1,
+    efficiency: efficiency(3, 2),
   }
 ]
+
+const expectedResultHome =   [
+  {
+  name: teamHome.teamName,
+  totalPoints: 3,
+  totalGames: 1,
+  totalVictories: 1,
+  totalDraws: 0,
+  totalLosses: 0,
+  goalsFavor: 4,
+  goalsOwn: 2,
+  goalsBalance: 2,
+  efficiency: efficiency(3, 1),
+}, {
+  name: teamAway.teamName,
+  totalPoints: 3,
+  totalGames: 1,
+  totalVictories: 1,
+  totalDraws: 0,
+  totalLosses: 0,
+  goalsFavor: 1,
+  goalsOwn: 0,
+  goalsBalance: 1,
+  efficiency: efficiency(3, 1),
+}]
 
 describe("Test '/leaderboard/home' GET route", () => {
   it(`When all goes well: should return status ${OK} and all data`, async () => {
@@ -71,7 +102,28 @@ describe("Test '/leaderboard/home' GET route", () => {
       .request(app)
       .get('/leaderboard/home');
   
-    expect(body).to.deep.equal(expectedResult);
+    expect(body).to.deep.equal(expectedResultHome);
+    expect(status).to.equal(OK);
+    
+    sinon.restore();
+  });
+});
+
+describe("Test '/leaderboard' GET route", () => {
+  it(`When all goes well: should return status ${OK} and all data`, async () => {
+    sinon
+    .stub(Match, 'findAll')
+    .resolves(matches as Match[]);
+
+    sinon
+    .stub(Team, 'findAll')
+    .resolves([teamHome, teamAway] as Team[]);
+    
+    const { body, status } = await chai
+      .request(app)
+      .get('/leaderboard');
+  
+    expect(body).to.deep.equal(expectedResultAll);
     expect(status).to.equal(OK);
     
     sinon.restore();
