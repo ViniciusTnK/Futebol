@@ -4,6 +4,8 @@ import { defaultErrorMsg } from '../errorMessages';
 import matchesService from './matchesService';
 import teamsService from './teamsService';
 
+type places = 'away' | 'home' | 'all';
+
 function whoIsBigger(a: number, b: number) {
   return (a > b) ? 1 : -1;
 }
@@ -62,10 +64,18 @@ function efficiency(points: number, matches: number) {
   return Math.round((points / (matches * 3)) * 100 * 100) / 100;
 }
 
-function getAllInfo(teams: Team[], matches: Match[], string: string) {
-  const place = string === 'home' ? 'homeTeam' : 'awayTeam';
+function getMatchesByPlace(place: places, id: number, matches: Match[]) {
+  if (place === 'all') {
+    return matches.filter(({ homeTeam, awayTeam }) => homeTeam === id || awayTeam === id);
+  }
+
+  const team = place === 'home' ? 'homeTeam' : 'awayTeam';
+  return matches.filter(({ [team]: teamId }) => teamId === id);
+}
+
+function getAllInfo(teams: Team[], matches: Match[], place: places) {
   return teams.map(async ({ id, teamName }) => {
-    const thisTeamMatches = matches.filter(({ [place]: teamId }) => (teamId === id));
+    const thisTeamMatches = getMatchesByPlace(place, id, matches);
     const totalGames = thisTeamMatches.length;
     const data = getData(id, thisTeamMatches);
 
@@ -81,30 +91,41 @@ function getAllInfo(teams: Team[], matches: Match[], string: string) {
   });
 }
 
-async function getLeaderboard(place: string) {
+async function getLeaderboardSorted(place: places) {
+  const [teams, matches] = await Promise.all([teamsService.getAll(), matchesService.getAll()]);
+  if (isError(teams) || isError(matches)) return defaultErrorMsg();
+
+  const finishedMatches = matches.filter(({ inProgress }) => !inProgress);
+  const result = await Promise.all(getAllInfo(teams, finishedMatches, place));
+
+  return result.sort((a, b): number => {
+    const {
+      totalPoints: aP, totalVictories: aV, goalsBalance: aB, goalsFavor: aFavor, goalsOwn: aOwn,
+    } = a;
+    const {
+      totalPoints: bP, totalVictories: bV, goalsBalance: bB, goalsFavor: bFavor, goalsOwn: bOwn,
+    } = b;
+    const array = [aP, aV, aB, aFavor, aOwn];
+    const brray = [bP, bV, bB, bFavor, bOwn];
+
+    // invert so it descend
+    return -1 * orderByCriteria(array, brray);
+  });
+}
+
+async function getLeaderboardByPlace(place: places) {
   try {
-    const [teams, matches] = await Promise.all([teamsService.getAll(), matchesService.getAll()]);
-    if (isError(teams) || isError(matches)) return defaultErrorMsg();
+    return await getLeaderboardSorted(place);
+  } catch (error) { return { error }; }
+}
 
-    const finishedMatches = matches.filter(({ inProgress }) => !inProgress);
-    const result = await Promise.all(getAllInfo(teams, finishedMatches, place));
-
-    return result.sort((a, b): number => {
-      const {
-        totalPoints: aP, totalVictories: aV, goalsBalance: aB, goalsFavor: aFavor, goalsOwn: aOwn,
-      } = a;
-      const {
-        totalPoints: bP, totalVictories: bV, goalsBalance: bB, goalsFavor: bFavor, goalsOwn: bOwn,
-      } = b;
-      const array = [aP, aV, aB, aFavor, aOwn];
-      const brray = [bP, bV, bB, bFavor, bOwn];
-
-      // invert so it descend
-      return -1 * orderByCriteria(array, brray);
-    });
+async function getLeaderboard() {
+  try {
+    return await getLeaderboardSorted('all');
   } catch (error) { return { error }; }
 }
 
 export default {
+  getLeaderboardByPlace,
   getLeaderboard,
 };
