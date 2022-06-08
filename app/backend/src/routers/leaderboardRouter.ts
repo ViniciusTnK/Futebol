@@ -3,6 +3,7 @@ import { leaderboardController } from '../controllers';
 
 const router = Router();
 
-router.get('/:place', leaderboardController.getLeaderboard);
+router.get('/', leaderboardController.getLeaderboard);
+router.get('/:place', leaderboardController.getLeaderboardByPlace);
 
 export default router;
