@@ -7,6 +7,7 @@ import teamsService from './teamsService';
 type places = 'away' | 'home' | 'all';
 
 function whoIsBigger(a: number, b: number) {
+  // 1 for a, -1 for b
   return (a > b) ? 1 : -1;
 }
 
@@ -74,7 +75,7 @@ function getMatchesByPlace(place: places, id: number, matches: Match[]) {
 }
 
 function getAllInfo(teams: Team[], matches: Match[], place: places) {
-  return teams.map(async ({ id, teamName }) => {
+  return teams.map(({ id, teamName }) => {
     const thisTeamMatches = getMatchesByPlace(place, id, matches);
     const totalGames = thisTeamMatches.length;
     const data = getData(id, thisTeamMatches);
@@ -97,7 +98,7 @@ async function getLeaderboardByPlace(place: places) {
     if (isError(teams) || isError(matches)) return defaultErrorMsg();
 
     const finishedMatches = matches.filter(({ inProgress }) => !inProgress);
-    const result = await Promise.all(getAllInfo(teams, finishedMatches, place));
+    const result = getAllInfo(teams, finishedMatches, place);
 
     return result.sort((a, b): number => {
       const {
@@ -109,7 +110,7 @@ async function getLeaderboardByPlace(place: places) {
       const array = [aP, aV, aB, aFavor, aOwn];
       const brray = [bP, bV, bB, bFavor, bOwn];
 
-      // invert so it descend
+      // negate to decrease
       return -1 * orderByCriteria(array, brray);
     });
   } catch (error) { return { error }; }
