@@ -1,6 +1,6 @@
 import Team from '../database/models/team';
 import Match from '../database/models/match';
-import { defaultErrorMsg } from '../errorMessages';
+import { defaultErrorMsg } from '../utils/errorMessages';
 import matchesService from './matchesService';
 import teamsService from './teamsService';
 

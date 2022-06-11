@@ -10,7 +10,7 @@ import User from '../database/models/user';
 
 import { Response } from 'superagent';
 import { StatusCodes } from 'http-status-codes';
-import WebToken from '../JWT';
+import WebToken from '../utils/JWT';
 
 chai.use(chaiHttp);
 

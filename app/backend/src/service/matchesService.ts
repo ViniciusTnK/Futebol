@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { defaultErrorMsg, notFound } from '../errorMessages';
+import { defaultErrorMsg, notFound } from '../utils/errorMessages';
 import Match from '../database/models/match';
 import Team from '../database/models/team';
 import teamsService from './teamsService';

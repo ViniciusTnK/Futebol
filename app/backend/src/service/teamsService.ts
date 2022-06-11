@@ -1,4 +1,4 @@
-import { notFound } from '../errorMessages';
+import { notFound } from '../utils/errorMessages';
 import Teams from '../database/models/team';
 
 async function getAll() {

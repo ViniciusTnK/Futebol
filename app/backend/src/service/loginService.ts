@@ -1,6 +1,6 @@
 import bcrypt = require('bcryptjs');
 import { StatusCodes } from 'http-status-codes';
-import { defaultErrorMsg } from '../errorMessages';
+import { defaultErrorMsg } from '../utils/errorMessages';
 import User from '../database/models/user';
 
 function unauthorized() {

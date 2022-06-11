@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { loginService } from '../service';
-import WebToken from '../JWT';
 import { UserInterface } from '../interface/modelsInterfaces';
+import WebToken from '../utils/JWT';
 
 const userDefaultWebToken = new WebToken<UserInterface>();
 
