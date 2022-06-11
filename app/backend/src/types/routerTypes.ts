@@ -2,9 +2,9 @@ import { Router } from 'express';
 
 type validURL = `/${string}`;
 
-type RouterAndURL = {
-  url: validURL,
-  router: Router,
-};
+type RouterAndURL = [
+  validURL,
+  Router,
+];
 
 export { RouterAndURL, validURL };

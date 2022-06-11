@@ -5,10 +5,10 @@ import { loginRouter, teamsRouter, matchesRouter, leaderboardRouter } from './ro
 import { RouterAndURL } from './types/routerTypes';
 
 const routers: RouterAndURL[] = [
-  { url: '/login', router: loginRouter },
-  { url: '/teams', router: teamsRouter },
-  { url: '/matches', router: matchesRouter },
-  { url: '/leaderboard', router: leaderboardRouter },
+  ['/login', loginRouter],
+  ['/teams', teamsRouter],
+  ['/matches', matchesRouter],
+  ['/leaderboard', leaderboardRouter],
 ];
 
 const PORT = process.env.PORT || 3001;

@@ -17,7 +17,7 @@ class App {
     this._app = express();
     this.config();
     this._app.use(cors(corsOptions));
-    routers.forEach(({ url, router }) => this._app.use(url, router));
+    routers.forEach(([url, router]) => this._app.use(url, router));
   }
 
   private config():void {
